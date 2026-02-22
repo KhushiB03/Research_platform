@@ -1,8 +1,15 @@
-import authservice from "./auth/auth.service";
-import { asyncHandler } from "../../src/utils/asyncHandler";
+const authService = require("./auth/auth.service");
+const {asyncHandler} = require("../utils/asyncHandler");
 
-export const login = asyncHandler(async(req:any , res:any)=>{
-    const {email  , password} = req.body;
-    const data = await authservice.login(email , password);
+const register = asyncHandler(async(req:any , res:any)=>{
+    const {email , password} = req.body;
+    const data = await authService.register(email,password);
+    res.status(201).json(data);
+
+});
+const login = asyncHandler(async(req:any , res:any)=>{
+    const {email,password}  = req.body;
+    const data = await authService.login(email,password);
     res.json(data);
 });
+module.exports ={register,login};
