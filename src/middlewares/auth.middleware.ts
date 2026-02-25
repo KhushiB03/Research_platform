@@ -1,22 +1,24 @@
-const {verifyToken} = require("../utils/jwt");
-const authMiddleware = (req : any, res :any , next : any )=>{
-    const header = req.headers.authorization ;
-    if(!header.startswith("example ")){
-        return res.status(401).json({
-            message : "unauthorized"
-        });
+import {Request , Response , NextFunction} from "express";
+import jwt from "jsonwebtoken";
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
+export const authenticate =(
+    req:    Request,
+    res:Response,
+    next :NextFunction
+)=>{
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+        return res.status(401).json({message:"no token provided"});
     }
-    const token = header.split(" ")[1];
+    const token = authHeader.split(" ")[1];
     try{
-        const decoded = verifyToken(token);
-        req.user = decoded;
+        const decoded = jwt.verify(token , JWT_SECRET);
+        (req as any).user = decoded;
         next();
 
     }catch(err){
-        res.status(401).json({
-            message :"invalid token"
-        });
+        return res.status(400).json({message:"invalid token"});
     }
+
 };
-module.exports = authMiddleware;
