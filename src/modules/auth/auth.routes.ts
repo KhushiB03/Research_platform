@@ -1,24 +1,26 @@
-const express = require("express");
-const router = express.Router();
-const { login, register } = require("../auth.controller");
-const {authorize} = require("../../middlewares/authorize.middleware");
-const {authenticate } = require("../../middlewares/auth.middleware");
+import { Router } from "express";
+import { login, register } from "../auth.controller"
+import { authorize } from "../../middlewares/authorize.middleware";
+import { authenticate } from "../../middlewares/auth.middleware";
+
+const router = Router();
 
 router.post("/login", login);
 router.post("/register", register);
+
 router.get(
   "/admin/dashboard",
   authenticate,
   authorize(["admin"]),
-
   (req, res) => {
     res.json({ message: "welcome admin" });
-  },
+  }
 );
+
 router.get("/me", authenticate, async (req, res) => {
   res.json({
-    user: req.user
+    user: (req as any).user
   });
 });
 
-module.exports = router;
+export default router;

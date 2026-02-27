@@ -1,8 +1,14 @@
-const errorMiddleware = ( err: any , req:any , res:any , next:any )=>{
-    console.log(err);
-    res.status(500).json({
-        message : err.message || "  internal server error"
-    });
-};
+import { Request, Response, NextFunction } from "express";
 
-module.exports ={ errorMiddleware };
+export const errorMiddleware = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log(err);
+
+  res.status(500).json({
+    message: err.message || "Internal Server Error"
+  });
+};

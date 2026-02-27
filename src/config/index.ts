@@ -1,1 +1,9 @@
-module.exports = require("./env")
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const env = {
+  PORT: process.env.PORT ? Number(process.env.PORT) : 4000
+};
+
+export default env;

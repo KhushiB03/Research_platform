@@ -1,15 +1,27 @@
-const authService = require("./auth/auth.service");
-const {asyncHandler} = require("../utils/asyncHandler");
+// ...existing code...
+import * as authService from "./auth/auth.service";
+import asyncHandler from "../utils/asyncHandler"
+import { Request, Response } from "express";
 
-const register = asyncHandler(async(req:any , res:any)=>{
-    const {email , password} = req.body;
-    const data = await authService.register(email,password);
+const register = asyncHandler(async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new Error("Email and password are required");
+  }
+    const data = await authService.register(email, password);
     res.status(201).json(data);
-
 });
-const login = asyncHandler(async(req:any , res:any)=>{
-    const {email,password}  = req.body;
-    const data = await authService.login(email,password);
+
+const login = asyncHandler(async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new Error("Email and password are required");
+  }
+    const data = await authService.login(email, password);
     res.json(data);
 });
-module.exports ={register,login};
+
+export { register, login };
+// ...existing code...

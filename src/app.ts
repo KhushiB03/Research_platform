@@ -1,10 +1,11 @@
-const express = require("express");
-const authRoutes = require("./modules/auth/auth.routes");
-const {errorMiddleware} = require("./middlewares/error.middleware");
+import express from "express";
+import authRoutes from "./modules/auth/auth.routes";
+import { errorMiddleware } from "./middlewares/error.middleware";
 
 const app = express();
+
 app.use(express.json());
-app.use("/api/auth" , authRoutes);
+app.use("/api/auth", authRoutes);
 app.use(errorMiddleware);
 
-module.exports = app;
+export default app;
