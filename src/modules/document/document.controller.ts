@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { processDocument } from "./document.service";
+import { documentQueue } from "../../infrastructure/queue/document.queue";
 
 export const uploadDocument = async (req: Request, res: Response) => {
   try {
@@ -9,20 +9,19 @@ export const uploadDocument = async (req: Request, res: Response) => {
         message: "No file uploaded",
       });
     }
-
-    const result = await processDocument(req.file.path);
+await documentQueue.add({filepath : req.file.path,});
+    //const result = await processDocument(req.file.path);
 
     return res.status(200).json({
       success: true,
       message: "Document processed successfully",
-      data: result,
+      //data: result,
     });
   } catch (error) {
-    console.error("Upload error:", error);
-
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Error processing document",
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };
