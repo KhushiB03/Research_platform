@@ -9,7 +9,18 @@ export const uploadDocument = async (req: Request, res: Response) => {
         message: "No file uploaded",
       });
     }
-await documentQueue.add({filepath : req.file.path,});
+await documentQueue.add(
+  { filepath: req.file.path },
+  {
+    attempts: 3,
+    backoff: {
+      type: "exponential",
+      delay: 2000,
+    },
+    removeOnComplete: true,
+    removeOnFail: false,
+  }
+);
     //const result = await processDocument(req.file.path);
 
     return res.status(200).json({
