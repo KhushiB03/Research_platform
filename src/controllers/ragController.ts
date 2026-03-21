@@ -1,5 +1,6 @@
 import { Response,Request } from "express";
 import { getAnswer } from "../services/ragService";
+import { success } from "zod";
 
 export const askQuestion=async(req:Request , res:Response)=>{
     try{
@@ -9,6 +10,12 @@ export const askQuestion=async(req:Request , res:Response)=>{
             success:true,
             answer
         });
+        if(!answer){
+            return res.json({
+                success:true,
+                message:"no relevant information found"
+            })
+        }
     }catch(error:any){
         res.status(500).json({
             success:false,
